@@ -1,12 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import * as os from 'os';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
   @Get()
-  getHello(): any {
-    return this.appService.getHello();
+  getHostStatus() {
+    return {
+      status: 'Running 🚀',
+      host: os.hostname(),
+      version: os.version() + '-' + os.arch(),
+    };
   }
 }
