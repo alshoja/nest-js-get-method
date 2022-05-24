@@ -3,7 +3,7 @@ import * as db from '../src/db/db.json';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  getHello(): any[] {
+    return db;
   }
 }
