@@ -1,15 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreatePostDto } from './dto/create-post.dto';
 import { PostsRepository } from './posts.repository';
 
 @Injectable()
 export class PostsService {
   constructor(private readonly postsRepository: PostsRepository) {}
 
-  findAll() {
+  findAll(): CreatePostDto[] {
     return this.postsRepository.findAll();
   }
 
-  findOne(id: number) {
+  findOne(id: number): CreatePostDto {
     const user = this.postsRepository.findOne(id);
     if (!user) throw new NotFoundException(`Sorry we couldn't find the post`);
     return user;
