@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostsRepository } from './posts.repository';
 
 @Injectable()
@@ -10,6 +10,8 @@ export class PostsService {
   }
 
   findOne(id: number) {
-    return this.postsRepository.findOne(id);
+    const user = this.postsRepository.findOne(id);
+    if (!user) throw new NotFoundException(`Sorry we couldn't find the post`);
+    return user;
   }
 }
