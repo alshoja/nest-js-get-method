@@ -1,23 +1,19 @@
-import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostsRepository } from '../posts.repository';
-import { PostsService } from '../posts.service';
 
-describe('PostsService', () => {
-  let service: PostsService;
+describe('PostsRepository', () => {
   let postRepository: PostsRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [PostsService, PostsRepository],
+      providers: [PostsRepository],
     }).compile();
 
-    service = module.get<PostsService>(PostsService);
     postRepository = module.get<PostsRepository>(PostsRepository);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(postRepository).toBeDefined();
   });
 
   it('should return an array of posts', async () => {
@@ -30,7 +26,7 @@ describe('PostsService', () => {
       },
     ];
     jest.spyOn(postRepository, 'findAll').mockImplementation(() => result);
-    expect(await service.findAll()).toBe(result);
+    expect(await postRepository.findAll()).toBe(result);
   });
 
   it('should return only one post', async () => {
@@ -41,16 +37,8 @@ describe('PostsService', () => {
       body: 'est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla',
     };
 
-    const post = await service.findOne(2);
+    const post = await postRepository.findOne(2);
     expect(post.body).toBe(result.body);
     expect(post.id).toBe(result.id);
-  });
-
-  it('should return NotFoundException', async () => {
-    try {
-      await service.findOne(200);
-    } catch (error) {
-      expect(error).toBeInstanceOf(NotFoundException);
-    }
   });
 });

@@ -4,7 +4,7 @@ import { PostsRepository } from './posts.repository';
 
 @Injectable()
 export class PostsService {
-  constructor(private readonly postsRepository: PostsRepository) {}
+  constructor(private readonly postsRepository: PostsRepository) { }
 
   findAll(): CreatePostDto[] {
     return this.postsRepository.findAll();
@@ -12,7 +12,10 @@ export class PostsService {
 
   findOne(id: number): CreatePostDto {
     const user = this.postsRepository.findOne(id);
-    if (!user) throw new NotFoundException(`Sorry we couldn't find the post`);
+    if (!user)
+      throw new NotFoundException(
+        `Sorry we couldn't find the post on given ID ${id}`,
+      );
     return user;
   }
 }
