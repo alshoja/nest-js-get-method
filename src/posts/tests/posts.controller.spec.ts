@@ -5,7 +5,7 @@ import { PostsService } from '../posts.service';
 
 describe('PostsController', () => {
   let controller: PostsController;
-  let postsService: PostsService;
+  let postRepository: PostsRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -13,8 +13,8 @@ describe('PostsController', () => {
       providers: [PostsService, PostsRepository],
     }).compile();
 
-    postsService = module.get<PostsService>(PostsService);
     controller = module.get<PostsController>(PostsController);
+    postRepository = module.get<PostsRepository>(PostsRepository);
   });
 
   it('should be defined', () => {
@@ -30,7 +30,7 @@ describe('PostsController', () => {
         body: 'est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla',
       },
     ];
-    jest.spyOn(postsService, 'findAll').mockImplementation(() => result);
+    jest.spyOn(postRepository, 'findAll').mockImplementation(() => result);
     expect(await controller.findAll()).toBe(result);
   });
 
@@ -41,7 +41,7 @@ describe('PostsController', () => {
       title: 'qui est esse',
       body: 'est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla',
     };
-    jest.spyOn(postsService, 'findOne').mockImplementation(() => result);
+    jest.spyOn(postRepository, 'findOne').mockImplementation(() => result);
     expect(await controller.findOne('2')).toBe(result);
   });
 });
