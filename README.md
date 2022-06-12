@@ -35,6 +35,9 @@ $ npm install
 ## Running the app
 
 ```bash
+# severless
+$ npx serverless offline
+
 # development
 $ npm run start
 
