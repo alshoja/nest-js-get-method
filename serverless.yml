@@ -1,4 +1,6 @@
+	
 org: alshoja
+app: aws-node
 console: true
 service: serverless-posts
 

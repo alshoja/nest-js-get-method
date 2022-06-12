@@ -166,6 +166,52 @@
               }
             }
           },
+          "EnterpriseLogAccessIamRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "AWS": "arn:aws:iam::802587217904:root"
+                    },
+                    "Action": "sts:AssumeRole",
+                    "Condition": {
+                      "StringEquals": {
+                        "sts:ExternalId": "ServerlessEnterprise-b8db23c1-a98c-49ac-b855-f7b453d93277"
+                      }
+                    }
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": "LogFilterAccess",
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:FilterLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::GetAtt": [
+                              "MainLogGroup",
+                              "Arn"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
           "SlsConsoleOtelExtension": {
             "Type": "AWS::Lambda::LayerVersion",
             "Properties": {
@@ -185,9 +231,9 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/serverless-posts/dev/1655033166817-2022-06-12T11:26:06.817Z/serverless-posts.zip"
+                "S3Key": "serverless/serverless-posts/dev/1655034572806-2022-06-12T11:49:32.806Z/serverless-posts.zip"
               },
-              "Handler": "dist/src/serverless.handler",
+              "Handler": "s_main.handler",
               "Runtime": "nodejs14.x",
               "FunctionName": "serverless-posts-dev-main",
               "MemorySize": 1024,
@@ -215,14 +261,14 @@
               "MainLogGroup"
             ]
           },
-          "MainLambdaVersionVtCkjrOL483SRvPXfuY3wToGBCpouojPmQ3HGe1j8": {
+          "MainLambdaVersion55fPMbJ74KR5JyaYwD9cGTKt35l8hfW64wBdXdlmlg": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "MainLambdaFunction"
               },
-              "CodeSha256": "GcAbpi7MWKf/HSt9BR6V6lFM+0SSCdXecLOiz5v+eHk="
+              "CodeSha256": "kuV8zGlijvBgXEdBsaE/9An82Y/0Qh6m7XUzn/zgfHg="
             }
           },
           "ApiGatewayRestApi": {
@@ -347,7 +393,7 @@
               "MainLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1655033149713": {
+          "ApiGatewayDeployment1655034549279": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -396,6 +442,153 @@
                 ]
               }
             }
+          },
+          "ApiGatewayLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/api-gateway/serverless-posts-dev"
+            }
+          },
+          "CustomApiGatewayAccountCloudWatchRole": {
+            "Type": "Custom::ApiGatewayAccountRole",
+            "Version": 1,
+            "Properties": {
+              "ServiceToken": {
+                "Fn::GetAtt": [
+                  "CustomDashresourceDashapigwDashcwDashroleLambdaFunction",
+                  "Arn"
+                ]
+              }
+            }
+          },
+          "IamRoleCustomResourcesLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "dev",
+                        "serverless-posts",
+                        "custom-resources-lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Resource": {
+                          "Fn::Join": [
+                            ":",
+                            [
+                              "arn",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              "iam:",
+                              {
+                                "Ref": "AWS::AccountId"
+                              },
+                              "role/*"
+                            ]
+                          ]
+                        },
+                        "Action": [
+                          "iam:AttachRolePolicy",
+                          "iam:CreateRole",
+                          "iam:ListAttachedRolePolicies",
+                          "iam:PassRole"
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Resource": {
+                          "Fn::Join": [
+                            ":",
+                            [
+                              "arn",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              "apigateway:*::/account"
+                            ]
+                          ]
+                        },
+                        "Action": [
+                          "apigateway:GET",
+                          "apigateway:PATCH"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "CustomDashresourceDashapigwDashcwDashroleLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/serverless-posts/dev/1655034572806-2022-06-12T11:49:32.806Z/custom-resources.zip"
+              },
+              "FunctionName": "serverless-posts-dev-custom-resource-apigw-cw-role",
+              "Handler": "api-gateway-cloud-watch-role/handler.handler",
+              "MemorySize": 1024,
+              "Runtime": "nodejs14.x",
+              "Timeout": 180,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleCustomResourcesLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "IamRoleCustomResourcesLambdaExecution"
+            ]
+          },
+          "CWLSubFilterMainLogGroupUsEast1": {
+            "Type": "AWS::Logs::SubscriptionFilter",
+            "Properties": {
+              "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:b8db23c1-a98c-49ac-b855-f7b453d93277#WvNgzn0FMyXnK2xxbv#serverless-posts#dev",
+              "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
+              "LogGroupName": {
+                "Ref": "MainLogGroup"
+              }
+            }
+          },
+          "CWLSubFilterApiGatewayLogGroupUsEast1": {
+            "Type": "AWS::Logs::SubscriptionFilter",
+            "Properties": {
+              "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:b8db23c1-a98c-49ac-b855-f7b453d93277#WvNgzn0FMyXnK2xxbv#serverless-posts#dev",
+              "FilterPattern": "\"SLS_ACCESS_LOG\"",
+              "LogGroupName": {
+                "Ref": "ApiGatewayLogGroup"
+              }
+            }
           }
         },
         "Outputs": {
@@ -407,10 +600,21 @@
               "Name": "sls-serverless-posts-dev-ServerlessDeploymentBucketName"
             }
           },
+          "EnterpriseLogAccessIamRole": {
+            "Value": {
+              "Fn::GetAtt": [
+                "EnterpriseLogAccessIamRole",
+                "Arn"
+              ]
+            },
+            "Export": {
+              "Name": "sls-serverless-posts-dev-EnterpriseLogAccessIamRole"
+            }
+          },
           "MainLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "MainLambdaVersionVtCkjrOL483SRvPXfuY3wToGBCpouojPmQ3HGe1j8"
+              "Ref": "MainLambdaVersion55fPMbJ74KR5JyaYwD9cGTKt35l8hfW64wBdXdlmlg"
             },
             "Export": {
               "Name": "sls-serverless-posts-dev-MainLambdaFunctionQualifiedArn"
@@ -526,6 +730,11 @@
           }
         }
       },
+      "logs": {
+        "restApi": {
+          "format": "{\"requestTime\":\"$context.requestTime\",\"requestId\":\"$context.requestId\",\"apiId\":\"$context.apiId\",\"resourceId\":\"$context.resourceId\",\"resourcePath\":\"$context.resourcePath\",\"path\":\"$context.path\",\"httpMethod\":\"$context.httpMethod\",\"status\":\"$context.status\",\"authLatency\":\"$context.authorizer.integrationLatency\",\"integrationLatency\":\"$context.integrationLatency\",\"integrationStatus\":\"$context.integrationStatus\",\"responseLatency\":\"$context.responseLatency\",\"responseLength\":\"$context.responseLength\",\"errorMessage\":\"$context.error.message\",\"format\":\"SLS_ACCESS_LOG\",\"version\":\"1.0.0\"}"
+        }
+      },
       "vpc": {}
     },
     "plugins": [
@@ -534,7 +743,7 @@
     "pluginsData": {},
     "functions": {
       "main": {
-        "handler": "dist/src/serverless.handler",
+        "handler": "s_main.handler",
         "events": [
           {
             "http": {
@@ -557,13 +766,14 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "MainLambdaVersionVtCkjrOL483SRvPXfuY3wToGBCpouojPmQ3HGe1j8"
+        "versionLogicalId": "MainLambdaVersion55fPMbJ74KR5JyaYwD9cGTKt35l8hfW64wBdXdlmlg"
       }
     },
     "configValidationMode": "warn",
     "serviceFilename": "serverless.yml",
     "initialServerlessConfig": {
       "org": "alshoja",
+      "app": "aws-node",
       "console": true,
       "service": "serverless-posts",
       "plugins": {
@@ -576,14 +786,17 @@
         "$ref": "$[\"service\"][\"functions\"]"
       }
     },
+    "app": "aws-node",
     "org": "alshoja",
     "layers": {},
     "isDashboardMonitoringPreconfigured": true,
-    "isDashboardAppPreconfigured": false,
+    "isDashboardAppPreconfigured": true,
+    "orgUid": "b8db23c1-a98c-49ac-b855-f7b453d93277",
+    "appUid": "WvNgzn0FMyXnK2xxbv",
     "artifact": "/home/alshoja/nest-js-get-method/.serverless/serverless-posts.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/serverless-posts/dev/1655033166817-2022-06-12T11:26:06.817Z",
+    "artifactDirectoryName": "serverless/serverless-posts/dev/1655034572806-2022-06-12T11:49:32.806Z",
     "artifact": "serverless-posts.zip"
   },
   "console": {
