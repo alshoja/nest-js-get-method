@@ -185,7 +185,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/serverless-posts/dev/1655031346139-2022-06-12T10:55:46.139Z/serverless-posts.zip"
+                "S3Key": "serverless/serverless-posts/dev/1655033166817-2022-06-12T11:26:06.817Z/serverless-posts.zip"
               },
               "Handler": "dist/src/serverless.handler",
               "Runtime": "nodejs14.x",
@@ -215,14 +215,14 @@
               "MainLogGroup"
             ]
           },
-          "MainLambdaVersionfm27amNEaHOt6hCtp68vYAw4ZQFUS9qVBg4PTzA4R8": {
+          "MainLambdaVersionVtCkjrOL483SRvPXfuY3wToGBCpouojPmQ3HGe1j8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "MainLambdaFunction"
               },
-              "CodeSha256": "jw6I9PxjopttUY9qVfdDIPbI+J6o6ZwW74z5ksAxX2M="
+              "CodeSha256": "GcAbpi7MWKf/HSt9BR6V6lFM+0SSCdXecLOiz5v+eHk="
             }
           },
           "ApiGatewayRestApi": {
@@ -347,7 +347,7 @@
               "MainLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1655031326629": {
+          "ApiGatewayDeployment1655033149713": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -410,7 +410,7 @@
           "MainLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "MainLambdaVersionfm27amNEaHOt6hCtp68vYAw4ZQFUS9qVBg4PTzA4R8"
+              "Ref": "MainLambdaVersionVtCkjrOL483SRvPXfuY3wToGBCpouojPmQ3HGe1j8"
             },
             "Export": {
               "Name": "sls-serverless-posts-dev-MainLambdaFunctionQualifiedArn"
@@ -557,12 +557,14 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "MainLambdaVersionfm27amNEaHOt6hCtp68vYAw4ZQFUS9qVBg4PTzA4R8"
+        "versionLogicalId": "MainLambdaVersionVtCkjrOL483SRvPXfuY3wToGBCpouojPmQ3HGe1j8"
       }
     },
     "configValidationMode": "warn",
     "serviceFilename": "serverless.yml",
     "initialServerlessConfig": {
+      "org": "alshoja",
+      "console": true,
       "service": "serverless-posts",
       "plugins": {
         "$ref": "$[\"service\"][\"plugins\"]"
@@ -572,9 +574,7 @@
       },
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
-      },
-      "org": "alshoja",
-      "console": true
+      }
     },
     "org": "alshoja",
     "layers": {},
@@ -583,7 +583,7 @@
     "artifact": "/home/alshoja/nest-js-get-method/.serverless/serverless-posts.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/serverless-posts/dev/1655031346139-2022-06-12T10:55:46.139Z",
+    "artifactDirectoryName": "serverless/serverless-posts/dev/1655033166817-2022-06-12T11:26:06.817Z",
     "artifact": "serverless-posts.zip"
   },
   "console": {
